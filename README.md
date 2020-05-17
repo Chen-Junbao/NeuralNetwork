@@ -17,6 +17,7 @@ Pillow == 6.0.0
 |:---:|:---:|
 |AlexNet|82.32|
 |VGG-19|88.56|
+
 The above results are obtained under the following hyperparameter settings.
 
 |hyperparameter|value|
@@ -25,6 +26,7 @@ The above results are obtained under the following hyperparameter settings.
 |epoch|100|
 |learning rate|1e-4|
 |batchsize|256|
+
 > If the memory is not enough, reduce the batchsize appropriately. 
 ## Paper and Model
 1. **AlexNet**: ImageNet Classification with Deep Convolutional Neural Networks. [[pdf](http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf)] [[model](https://drive.google.com/open?id=1rjmQa41kz4FIx1C-gQoXqA_AcWWFIh4U)]

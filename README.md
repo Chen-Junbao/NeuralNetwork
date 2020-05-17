@@ -24,7 +24,8 @@ The above results are obtained under the following hyperparameter settings.
 |optimizer|Adam|
 |epoch|100|
 |learning rate|1e-4|
-|batch size|256|
+|batchsize|256|
+> If the memory is not enough, reduce the batchsize appropriately. 
 ## Paper and Model
 1. **AlexNet**: ImageNet Classification with Deep Convolutional Neural Networks. [[pdf](http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf)] [[model](https://drive.google.com/open?id=1rjmQa41kz4FIx1C-gQoXqA_AcWWFIh4U)]
 2. **VGG**: Very Deep Convolutional Networks for Large-Scale Image Recognition. [[pdf](https://arxiv.org/pdf/1409.1556v6.pdf)] [[model](https://drive.google.com/open?id=1R3q5YlbXoPqKlU-SA6DhKWLMyM5mGgqB)]

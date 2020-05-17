@@ -23,7 +23,7 @@ class CifarTrain(torch.utils.data.Dataset):
         images = []
         labels = []
         for i in range(1, 6):
-            with open('../cifar10/data_batch_' + str(i), 'rb') as f:
+            with open('./cifar10/data_batch_' + str(i), 'rb') as f:
                 data = pickle.load(f, encoding='bytes')
                 images += list(data[b'data'])
                 labels += list(data[b'labels'])
@@ -46,7 +46,7 @@ class CifarTrain(torch.utils.data.Dataset):
 
 class CifarTest(torch.utils.data.Dataset):
     def __init__(self):
-        with open('../cifar10/test_batch', 'rb') as f:
+        with open('./cifar10/test_batch', 'rb') as f:
             data = pickle.load(f, encoding='latin1')
             images = list(data['data'])
             labels = list(data['labels'])

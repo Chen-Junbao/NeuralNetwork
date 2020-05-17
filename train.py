@@ -1,20 +1,19 @@
-from dataset.generate_dataset import *
-from vgg.network import VGG19
+from generate_dataset import *
+from network.googlenet import GoogLeNet
 
 import torch.nn as nn
 import torch.utils.data
 
 if __name__ == "__main__":
-
     dataset = CifarTrain()
-    train_loader = torch.utils.data.DataLoader(dataset, batch_size=256)
+    train_loader = torch.utils.data.DataLoader(dataset, batch_size=64)
 
     dataset = CifarTest()
-    test_loader = torch.utils.data.DataLoader(dataset, batch_size=256)
+    test_loader = torch.utils.data.DataLoader(dataset, batch_size=64)
 
     criterion = nn.CrossEntropyLoss().cuda()
 
-    model = VGG19().cuda()
+    model = GoogLeNet().cuda()
 
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
@@ -64,5 +63,5 @@ if __name__ == "__main__":
             print("accuracy:", accuracy)
             if accuracy > best_accuracy:
                 # save best model
-                torch.save(model, "../model/vgg-19.pth")
+                torch.save(model, "./model/googlenet.pth")
                 best_accuracy = accuracy

@@ -1,21 +1,41 @@
 from generate_dataset import *
-from network.googlenet import GoogLeNet
+from network.densenet import densenet_121
+from apex import amp
+from PIL import Image
 
 import torch.nn as nn
 import torch.utils.data
+import numpy as np
+
+
+def resnet_preprocess(input_data):
+    new_data = []
+    for i in range(len(input_data)):
+        a = input_data[i].numpy()
+        a = np.uint8(np.transpose(a, (1, 2, 0)))
+        img = Image.fromarray(a)
+        img = img.resize((224, 224))
+        a = np.array(img)
+        new_data.append(np.transpose(a, (2, 0, 1)))
+    new_data = torch.from_numpy(np.asarray(new_data))
+
+    return new_data.float()
+
 
 if __name__ == "__main__":
     dataset = CifarTrain()
-    train_loader = torch.utils.data.DataLoader(dataset, batch_size=64)
+    train_loader = torch.utils.data.DataLoader(dataset, batch_size=512, shuffle=True)
 
     dataset = CifarTest()
-    test_loader = torch.utils.data.DataLoader(dataset, batch_size=64)
+    test_loader = torch.utils.data.DataLoader(dataset, batch_size=768, shuffle=True)
 
     criterion = nn.CrossEntropyLoss().cuda()
 
-    model = GoogLeNet().cuda()
+    model = densenet_121().cuda()
 
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+
+    model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
 
     best_accuracy = 0.0
 
@@ -27,6 +47,8 @@ if __name__ == "__main__":
 
         for j, data in enumerate(train_loader):
             x, y = data
+            # if the model is ResNet, preprocess the dataset first
+            # x = resnet_preprocess(x)
             x = x.cuda()
             y = y.cuda()
 
@@ -37,7 +59,8 @@ if __name__ == "__main__":
             loss = criterion(prediction, y.long())
 
             optimizer.zero_grad()
-            loss.backward()
+            with amp.scale_loss(loss, optimizer) as scaled_loss:
+                scaled_loss.backward()
             optimizer.step()
 
         correct = torch.zeros(1).squeeze().cuda()
@@ -47,6 +70,8 @@ if __name__ == "__main__":
         with torch.no_grad():
             for j, data in enumerate(test_loader):
                 x, y = data
+                # if the model is ResNet, preprocess the dataset first
+                # x = resnet_preprocess(x)
                 x = x.cuda()
                 y = y.cuda()
 
@@ -63,5 +88,5 @@ if __name__ == "__main__":
             print("accuracy:", accuracy)
             if accuracy > best_accuracy:
                 # save best model
-                torch.save(model, "./model/googlenet.pth")
+                torch.save(model, "./model/resnet.pth")
                 best_accuracy = accuracy

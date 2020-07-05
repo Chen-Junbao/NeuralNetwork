@@ -1,6 +1,6 @@
 from generate_dataset import *
-from network.densenet import densenet_121
-from apex import amp
+from network.mobilenet_v2 import MobileNetV2
+# from apex import amp
 from PIL import Image
 
 import torch.nn as nn
@@ -22,32 +22,39 @@ def resnet_preprocess(input_data):
     return new_data.float()
 
 
-if __name__ == "__main__":
-    dataset = CifarTrain()
-    train_loader = torch.utils.data.DataLoader(dataset, batch_size=512, shuffle=True)
+def adjust_learning_rate(optimizer, init_lr, epoch):
+    learning_rate = init_lr * (0.2 ** (epoch // 60))
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = learning_rate
 
-    dataset = CifarTest()
-    test_loader = torch.utils.data.DataLoader(dataset, batch_size=768, shuffle=True)
+
+if __name__ == "__main__":
+    dataset = Cifar100Train()
+    train_loader = torch.utils.data.DataLoader(dataset, batch_size=128, shuffle=True)
+
+    dataset = Cifar100Test()
+    test_loader = torch.utils.data.DataLoader(dataset, batch_size=784, shuffle=True)
 
     criterion = nn.CrossEntropyLoss().cuda()
 
-    model = densenet_121().cuda()
+    model = MobileNetV2(num_class=100).cuda()
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=5e-4)
 
-    model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
+    # model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
 
     best_accuracy = 0.0
 
-    epoch = 100
+    epoch = 500
     for i in range(epoch):
         print("epoch:", i)
 
         model.train()
 
         for j, data in enumerate(train_loader):
+            adjust_learning_rate(optimizer, 0.1, i)
             x, y = data
-            # if the model is ResNet, preprocess the dataset first
+            # if the model` is ResNet or MobileNetV2, preprocess the dataset first
             # x = resnet_preprocess(x)
             x = x.cuda()
             y = y.cuda()
@@ -59,8 +66,11 @@ if __name__ == "__main__":
             loss = criterion(prediction, y.long())
 
             optimizer.zero_grad()
-            with amp.scale_loss(loss, optimizer) as scaled_loss:
-                scaled_loss.backward()
+            # with amp.scale_loss(loss, optimizer) as scaled_loss:
+            #     scaled_loss.backward()
+            #     print(scaled_loss)
+            loss.backward()
+            print(loss)
             optimizer.step()
 
         correct = torch.zeros(1).squeeze().cuda()
@@ -88,5 +98,5 @@ if __name__ == "__main__":
             print("accuracy:", accuracy)
             if accuracy > best_accuracy:
                 # save best model
-                torch.save(model, "./model/resnet.pth")
+                torch.save(model, "./model/mobilenetv2.pth")
                 best_accuracy = accuracy

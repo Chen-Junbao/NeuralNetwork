@@ -19,3 +19,4 @@ Pillow == 6.0.0
 4. **ResNet**: Deep Residual Learning for Image Recognition. [[pdf](https://arxiv.org/pdf/1512.03385.pdf)]
 5. **DenseNet**: Densely Connected Convolutional Networks. [[pdf](https://arxiv.org/pdf/1608.06993.pdf)]
 6. **MobileNet**: MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications. [[pdf](https://arxiv.org/pdf/1704.04861.pdf)]
+7. **MobileNetV2**: MobileNetV2: Inverted Residuals and Linear Bottlenecks. [[pdf](https://arxiv.org/pdf/1801.04381.pdf)]

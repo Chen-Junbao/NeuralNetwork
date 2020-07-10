@@ -1,5 +1,5 @@
 from generate_dataset import *
-from network.mobilenet_v2 import MobileNetV2
+from network.shufflenet import ShuffleNet
 # from apex import amp
 from PIL import Image
 
@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     criterion = nn.CrossEntropyLoss().cuda()
 
-    model = MobileNetV2(num_class=100).cuda()
+    model = ShuffleNet(num_class=100).cuda()
 
     optimizer = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=5e-4)
 

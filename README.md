@@ -21,3 +21,4 @@ Pillow == 6.0.0
 6. **MobileNet**: MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications. [[pdf](https://arxiv.org/pdf/1704.04861.pdf)]
 7. **MobileNetV2**: MobileNetV2: Inverted Residuals and Linear Bottlenecks. [[pdf](https://arxiv.org/pdf/1801.04381.pdf)]
 8. **ShuffleNet**: ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile Devices. [[pdf](https://arxiv.org/pdf/1707.01083v2.pdf)]
+9. **ResNeXt**: Aggregated Residual Transformations for Deep Neural Networks. [[pdf](https://arxiv.org/pdf/1611.05431.pdf)]

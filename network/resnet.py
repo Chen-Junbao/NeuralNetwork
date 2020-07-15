@@ -61,7 +61,7 @@ class BottleBlock(nn.Module):
 
 
 class ResNet(nn.Module):
-    def __init__(self, block, num_block, num_class=10):
+    def __init__(self, block, num_block, num_class):
         super().__init__()
 
         self.in_channels = 64
@@ -123,21 +123,21 @@ class ResNet(nn.Module):
         return output
 
 
-def resnet_18():
-    return ResNet(BasicBlock, [2, 2, 2, 2])
+def resnet_18(num_class):
+    return ResNet(BasicBlock, [2, 2, 2, 2], num_class)
 
 
-def resnet_34():
-    return ResNet(BasicBlock, [3, 4, 6, 3])
+def resnet_34(num_class):
+    return ResNet(BasicBlock, [3, 4, 6, 3], num_class)
 
 
-def resnet_50():
-    return ResNet(BottleBlock, [3, 4, 6, 3])
+def resnet_50(num_class):
+    return ResNet(BottleBlock, [3, 4, 6, 3], num_class)
 
 
-def resnet_101():
-    return ResNet(BottleBlock, [3, 4, 23, 3])
+def resnet_101(num_class):
+    return ResNet(BottleBlock, [3, 4, 23, 3], num_class)
 
 
-def resnet_152():
-    return ResNet(BottleBlock, [3, 8, 36, 3])
+def resnet_152(num_class):
+    return ResNet(BottleBlock, [3, 8, 36, 3], num_class)

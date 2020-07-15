@@ -1,5 +1,5 @@
 from generate_dataset import *
-from network.shufflenet import ShuffleNet
+from network.resnext import resnext50
 # from apex import amp
 from PIL import Image
 
@@ -30,16 +30,16 @@ def adjust_learning_rate(optimizer, init_lr, epoch):
 
 if __name__ == "__main__":
     dataset = Cifar100Train()
-    train_loader = torch.utils.data.DataLoader(dataset, batch_size=128, shuffle=True)
+    train_loader = torch.utils.data.DataLoader(dataset, batch_size=28, shuffle=True)
 
     dataset = Cifar100Test()
-    test_loader = torch.utils.data.DataLoader(dataset, batch_size=784, shuffle=True)
+    test_loader = torch.utils.data.DataLoader(dataset, batch_size=64, shuffle=True)
 
     criterion = nn.CrossEntropyLoss().cuda()
 
-    model = ShuffleNet(num_class=100).cuda()
+    model = resnext50(num_class=100).cuda()
 
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=5e-4)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
     # model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
 
@@ -52,10 +52,10 @@ if __name__ == "__main__":
         model.train()
 
         for j, data in enumerate(train_loader):
-            adjust_learning_rate(optimizer, 0.1, i)
+            # adjust_learning_rate(optimizer, 0.1, i)
             x, y = data
             # if the model` is ResNet or MobileNetV2, preprocess the dataset first
-            # x = resnet_preprocess(x)
+            x = resnet_preprocess(x)
             x = x.cuda()
             y = y.cuda()
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
             for j, data in enumerate(test_loader):
                 x, y = data
                 # if the model is ResNet, preprocess the dataset first
-                # x = resnet_preprocess(x)
+                x = resnet_preprocess(x)
                 x = x.cuda()
                 y = y.cuda()
 
@@ -98,5 +98,5 @@ if __name__ == "__main__":
             print("accuracy:", accuracy)
             if accuracy > best_accuracy:
                 # save best model
-                torch.save(model, "./model/mobilenetv2.pth")
+                torch.save(model, "./model/resnext.pth")
                 best_accuracy = accuracy

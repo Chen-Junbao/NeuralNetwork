@@ -1,5 +1,5 @@
-from generate_dataset import *
-from network.resnext import resnext50
+from classification.generate_dataset import *
+from classification.network.resnext import resnext50
 # from apex import amp
 from PIL import Image
 

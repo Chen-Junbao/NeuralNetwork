@@ -1,3 +1,5 @@
 .idea
 __pycache__
-model
+classification/model
+classification/cifar10
+classification/cifar100
